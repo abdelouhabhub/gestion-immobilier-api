@@ -19,4 +19,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/properties/{id}', [PropertyController::class, 'destroy']);
 
     Route::post('/properties/{property}/images', [ImageController::class, 'upload']);
+
+    Route::get('/me', [AuthController::class, 'me']);
+    Route::post('/refresh', [AuthController::class, 'refresh']);
 });
