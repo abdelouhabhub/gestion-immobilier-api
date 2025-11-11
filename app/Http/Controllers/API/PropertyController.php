@@ -14,6 +14,11 @@ use App\DTOs\FilterPropertiesDTO;
 use App\Models\Property;
 use Illuminate\Http\Request;
 
+/**
+ * @group Biens Immobiliers
+ *
+ * Gestion complète des biens immobiliers
+ */
 class PropertyController extends Controller
 {
 

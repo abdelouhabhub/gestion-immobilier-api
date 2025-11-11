@@ -1,0 +1,618 @@
+openapi: 3.0.3
+info:
+  title: 'API Gestion Immobilière Documentation'
+  description: "Documentation complète de l'API REST pour la gestion de biens immobiliers"
+  version: 1.0.0
+servers:
+  -
+    url: 'http://localhost'
+tags:
+  -
+    name: Authentication
+    description: "APIs pour l'authentification des utilisateurs"
+  -
+    name: 'Biens Immobiliers'
+    description: "\nGestion complète des biens immobiliers"
+  -
+    name: Endpoints
+    description: ''
+components:
+  securitySchemes:
+    default:
+      type: http
+      scheme: bearer
+      description: null
+security:
+  -
+    default: []
+paths:
+  /api/register:
+    post:
+      summary: 'Register a new user'
+      operationId: registerANewUser
+      description: 'Create a new user account with role-based access control'
+      parameters: []
+      responses:
+        201:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: true
+                  message: 'Account created successfully. Welcome!'
+                  data:
+                    user:
+                      id: 1
+                      name: 'Ahmed Benali'
+                      email: ahmed.benali@example.com
+                      role: agent
+                      created_at: '2025-11-11T18:00:00.000000Z'
+                    access_token: 1|abc123...
+                    token_type: Bearer
+                    expires_in: null
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: 'Account created successfully. Welcome!'
+                  data:
+                    type: object
+                    properties:
+                      user:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            example: 1
+                          name:
+                            type: string
+                            example: 'Ahmed Benali'
+                          email:
+                            type: string
+                            example: ahmed.benali@example.com
+                          role:
+                            type: string
+                            example: agent
+                          created_at:
+                            type: string
+                            example: '2025-11-11T18:00:00.000000Z'
+                      access_token:
+                        type: string
+                        example: 1|abc123...
+                      token_type:
+                        type: string
+                        example: Bearer
+                      expires_in:
+                        type: string
+                        example: null
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'The given data was invalid.'
+                  errors:
+                    email:
+                      - 'The email has already been taken.'
+                properties:
+                  message:
+                    type: string
+                    example: 'The given data was invalid.'
+                  errors:
+                    type: object
+                    properties:
+                      email:
+                        type: array
+                        example:
+                          - 'The email has already been taken.'
+                        items:
+                          type: string
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: 'Full name of the user.'
+                  example: 'Ahmed Benali'
+                  nullable: false
+                email:
+                  type: string
+                  description: 'Email address.'
+                  example: ahmed.benali@example.com
+                  nullable: false
+                password:
+                  type: string
+                  description: 'Password (minimum 8 characters).'
+                  example: SecurePass123
+                  nullable: false
+                password_confirmation:
+                  type: string
+                  description: 'Password confirmation.'
+                  example: SecurePass123
+                  nullable: false
+                role:
+                  type: string
+                  description: 'User role (admin, agent, guest).'
+                  example: agent
+                  nullable: false
+              required:
+                - name
+                - email
+                - password
+                - password_confirmation
+                - role
+      security: []
+  /api/login:
+    post:
+      summary: Login
+      operationId: login
+      description: 'Authentifier un utilisateur et obtenir un token'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: true
+                  data:
+                    user:
+                      id: 1
+                      name: Agent
+                      role: agent
+                    access_token: 2|xyz...
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      user:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            example: 1
+                          name:
+                            type: string
+                            example: Agent
+                          role:
+                            type: string
+                            example: agent
+                      access_token:
+                        type: string
+                        example: 2|xyz...
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: Email.
+                  example: agent@digitup.com
+                  nullable: false
+                password:
+                  type: string
+                  description: 'Mot de passe.'
+                  example: password
+                  nullable: false
+              required:
+                - email
+                - password
+      security: []
+  /api/logout:
+    post:
+      summary: Logout
+      operationId: logout
+      description: "Déconnecter l'utilisateur actuel"
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: true
+                  message: 'Logout successful'
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: 'Logout successful'
+      tags:
+        - Authentication
+  /api/me:
+    get:
+      summary: Me
+      operationId: me
+      description: "Récupérer le profil de l'utilisateur connecté"
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "{\n  \"success\": true,\n  \"data\": {...}\n}"
+      tags:
+        - Authentication
+  /api/refresh:
+    post:
+      summary: 'Refresh token'
+      operationId: refreshToken
+      description: 'Revoke current token and issue a new one'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: true
+                  message: 'Token refreshed successfully'
+                  data:
+                    access_token: 3|new_token...
+                    token_type: Bearer
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: 'Token refreshed successfully'
+                  data:
+                    type: object
+                    properties:
+                      access_token:
+                        type: string
+                        example: 3|new_token...
+                      token_type:
+                        type: string
+                        example: Bearer
+      tags:
+        - Authentication
+  /api/properties:
+    get:
+      summary: 'List Properties'
+      operationId: listProperties
+      description: 'Obtenir la liste paginée des biens'
+      parameters:
+        -
+          in: query
+          name: city
+          description: 'Filtrer par ville.'
+          example: Alger
+          required: false
+          schema:
+            type: string
+            description: 'Filtrer par ville.'
+            example: Alger
+            nullable: false
+        -
+          in: query
+          name: type
+          description: 'Type de bien.'
+          example: Villa
+          required: false
+          schema:
+            type: string
+            description: 'Type de bien.'
+            example: Villa
+            nullable: false
+        -
+          in: query
+          name: min_price
+          description: 'Prix minimum.'
+          example: 20000000.0
+          required: false
+          schema:
+            type: number
+            description: 'Prix minimum.'
+            example: 20000000.0
+            nullable: false
+        -
+          in: query
+          name: max_price
+          description: 'Prix maximum.'
+          example: 50000000.0
+          required: false
+          schema:
+            type: number
+            description: 'Prix maximum.'
+            example: 50000000.0
+            nullable: false
+        -
+          in: query
+          name: status
+          description: Statut.
+          example: disponible
+          required: false
+          schema:
+            type: string
+            description: Statut.
+            example: disponible
+            nullable: false
+        -
+          in: query
+          name: search
+          description: Recherche.
+          example: piscine
+          required: false
+          schema:
+            type: string
+            description: Recherche.
+            example: piscine
+            nullable: false
+      responses:
+        200:
+          description: ''
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "{\n  \"data\": [...]\n}"
+      tags:
+        - 'Biens Immobiliers'
+      security: []
+    post:
+      summary: 'Create Property'
+      operationId: createProperty
+      description: 'Créer un nouveau bien (Agent/Admin)'
+      parameters: []
+      responses:
+        201:
+          description: ''
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "{\n  \"success\": true,\n  \"data\": {...}\n}"
+      tags:
+        - 'Biens Immobiliers'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                type:
+                  type: string
+                  description: 'Type (Villa, Appartement, etc).'
+                  example: Villa
+                  nullable: false
+                rooms:
+                  type: integer
+                  description: 'Nombre de pièces.'
+                  example: 4
+                  nullable: true
+                surface:
+                  type: number
+                  description: 'Surface en m².'
+                  example: 200.0
+                  nullable: false
+                price:
+                  type: number
+                  description: 'Prix en DZD.'
+                  example: 25000000.0
+                  nullable: false
+                city:
+                  type: string
+                  description: Ville.
+                  example: Alger
+                  nullable: false
+                neighborhood:
+                  type: string
+                  description: Quartier.
+                  example: Hydra
+                  nullable: true
+                description:
+                  type: string
+                  description: Description.
+                  example: 'Belle villa'
+                  nullable: false
+                status:
+                  type: string
+                  description: Statut.
+                  example: disponible
+                  nullable: false
+                published:
+                  type: boolean
+                  description: Publié.
+                  example: true
+                  nullable: false
+              required:
+                - type
+                - surface
+                - price
+                - city
+                - description
+                - status
+  '/api/properties/{id}':
+    get:
+      summary: 'Show Property'
+      operationId: showProperty
+      description: "Afficher le détail d'un bien"
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "{\n  \"data\": {...}\n}"
+      tags:
+        - 'Biens Immobiliers'
+      security: []
+    put:
+      summary: 'Update Property'
+      operationId: updateProperty
+      description: 'Modifier un bien (Propriétaire/Admin)'
+      parameters: []
+      responses: {  }
+      tags:
+        - 'Biens Immobiliers'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                type:
+                  type: string
+                  description: ''
+                  example: Duplex
+                  nullable: false
+                  enum:
+                    - Appartement
+                    - Villa
+                    - Terrain
+                    - Studio
+                    - Duplex
+                rooms:
+                  type: integer
+                  description: 'Must be at least 1.'
+                  example: 16
+                  nullable: true
+                surface:
+                  type: number
+                  description: 'Must be at least 1.'
+                  example: 22
+                  nullable: false
+                price:
+                  type: number
+                  description: 'Must be at least 0.'
+                  example: 84
+                  nullable: false
+                city:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: z
+                  nullable: false
+                neighborhood:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: m
+                  nullable: true
+                description:
+                  type: string
+                  description: ''
+                  example: 'Eius et animi quos velit et.'
+                  nullable: false
+                status:
+                  type: string
+                  description: ''
+                  example: vendu
+                  nullable: false
+                  enum:
+                    - disponible
+                    - vendu
+                    - location
+                published:
+                  type: boolean
+                  description: ''
+                  example: true
+                  nullable: false
+              required:
+                - type
+                - surface
+                - price
+                - city
+                - description
+                - status
+    delete:
+      summary: 'Delete Property'
+      operationId: deleteProperty
+      description: 'Supprimer un bien (soft delete)'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  success: true
+                  message: 'Bien supprimé'
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: 'Bien supprimé'
+      tags:
+        - 'Biens Immobiliers'
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'ID du bien.'
+        example: 1
+        required: true
+        schema:
+          type: integer
+  '/api/properties/{property}/images':
+    post:
+      summary: ''
+      operationId: postApiPropertiesPropertyImages
+      description: ''
+      parameters: []
+      responses: {  }
+      tags:
+        - Endpoints
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                images:
+                  type: array
+                  description: 'Must be an image. Must not be greater than 2048 kilobytes.'
+                  items:
+                    type: string
+                    format: binary
+              required:
+                - images
+      security: []
+    parameters:
+      -
+        in: path
+        name: property
+        description: 'The property.'
+        example: architecto
+        required: true
+        schema:
+          type: string

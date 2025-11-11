@@ -25,15 +25,29 @@ return [
         [
             'match' => [
                 'prefixes' => ['api/*'],
+                'domains' => ['*'],
+            ],
+            'include' => [
+                'api/*'
+            ],
+            'exclude' => [
+                'api/sanctum/*'
+            ],
+            'apply' => [
+                'headers' => [
+                    'Content-Type' => 'application/json',
+                    'Accept' => 'application/json',
+                ],
             ],
         ],
     ],
+
 
     // The type of documentation output to generate.
     // - "static" will generate a static HTMl page in the /public/docs folder,
     // - "laravel" will generate the documentation as a Blade view, so you can add routing and authentication.
     // - "external_static" and "external_laravel" do the same as above, but pass the OpenAPI spec as a URL to an external UI template
-    'type' => 'laravel',
+    'type' => 'static',
 
     // See https://scribe.knuckles.wtf/laravel/reference/config#theme for supported options
     'theme' => 'default',
@@ -167,7 +181,7 @@ return [
     // Use removeStrategies() to remove an included strategy.
     'strategies' => [
         'metadata' => [
-            ...Defaults::METADATA_STRATEGIES,
+            Strategies\Metadata\GetFromDocBlocks::class,
         ],
         'headers' => [
             ...Defaults::HEADERS_STRATEGIES,
