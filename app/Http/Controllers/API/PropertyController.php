@@ -22,6 +22,22 @@ class PropertyController extends Controller
         private PropertyService $service
     ) {}
 
+    /**
+     * List Properties
+     *
+     * Obtenir la liste paginée des biens
+     *
+     * @queryParam city string Filtrer par ville. Example: Alger
+     * @queryParam type string Type de bien. Example: Villa
+     * @queryParam min_price number Prix minimum. Example: 20000000
+     * @queryParam max_price number Prix maximum. Example: 50000000
+     * @queryParam status string Statut. Example: disponible
+     * @queryParam search string Recherche. Example: piscine
+     *
+     * @response 200 {
+     *   "data": [...]
+     * }
+     */
     public function index(Request $request)
     {
         $filters = FilterPropertiesDTO::fromRequest($request->all());
@@ -30,6 +46,17 @@ class PropertyController extends Controller
         return PropertyResource::collection($properties);
     }
 
+    /**
+     * Show Property
+     *
+     * Afficher le détail d'un bien
+     *
+     * @urlParam id integer required ID du bien. Example: 1
+     *
+     * @response 200 {
+     *   "data": {...}
+     * }
+     */
     public function show($id)
     {
         $property = $this->service->getPropertyById($id);
@@ -46,6 +73,28 @@ class PropertyController extends Controller
         return new PropertyResource($property);
     }
 
+    /**
+     * Create Property
+     *
+     * Créer un nouveau bien (Agent/Admin)
+     *
+     * @authenticated
+     *
+     * @bodyParam type string required Type (Villa, Appartement, etc). Example: Villa
+     * @bodyParam rooms integer Nombre de pièces. Example: 4
+     * @bodyParam surface number required Surface en m². Example: 200
+     * @bodyParam price number required Prix en DZD. Example: 25000000
+     * @bodyParam city string required Ville. Example: Alger
+     * @bodyParam neighborhood string Quartier. Example: Hydra
+     * @bodyParam description string required Description. Example: Belle villa
+     * @bodyParam status string required Statut. Example: disponible
+     * @bodyParam published boolean Publié. Example: true
+     *
+     * @response 201 {
+     *   "success": true,
+     *   "data": {...}
+     * }
+     */
     public function store(StorePropertyRequest $request)
     {
         $this->authorize('create', Property::class);
@@ -64,6 +113,15 @@ class PropertyController extends Controller
         ], 201);
     }
 
+    /**
+     * Update Property
+     *
+     * Modifier un bien (Propriétaire/Admin)
+     *
+     * @authenticated
+     *
+     * @urlParam id integer required ID du bien. Example: 1
+     */
     public function update(UpdatePropertyRequest $request, $id)
     {
         $property = $this->service->getPropertyById($id);
@@ -87,6 +145,20 @@ class PropertyController extends Controller
         ]);
     }
 
+    /**
+     * Delete Property
+     *
+     * Supprimer un bien (soft delete)
+     *
+     * @authenticated
+     *
+     * @urlParam id integer required ID du bien. Example: 1
+     *
+     * @response 200 {
+     *   "success": true,
+     *   "message": "Bien supprimé"
+     * }
+     */
     public function destroy($id)
     {
         $property = $this->service->getPropertyById($id);

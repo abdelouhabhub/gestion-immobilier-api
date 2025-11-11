@@ -13,8 +13,7 @@ use Illuminate\Support\Str;
 
 /**
  * @group Authentication
- *
- * APIs for user registration, login, and logout with JWT token management
+ * APIs pour l'authentification des utilisateurs
  */
 class AuthController extends Controller
 {
@@ -120,38 +119,19 @@ class AuthController extends Controller
     }
 
     /**
-     * Login user
+     * Login
      *
-     * Authenticate user and return access token with rate limiting (5 attempts per minute)
+     * Authentifier un utilisateur et obtenir un token
      *
-     * @bodyParam email string required Email address. Example: agent@digitup.com
-     * @bodyParam password string required Password. Example: password
-     * @bodyParam remember boolean optional Remember me for extended session. Example: true
+     * @bodyParam email string required Email. Example: agent@digitup.com
+     * @bodyParam password string required Mot de passe. Example: password
      *
      * @response 200 {
      *   "success": true,
-     *   "message": "Login successful. Welcome back!",
      *   "data": {
-     *     "user": {
-     *       "id": 2,
-     *       "name": "Agent Immobilier",
-     *       "email": "agent@digitup.com",
-     *       "role": "agent"
-     *     },
-     *     "access_token": "2|xyz789...",
-     *     "token_type": "Bearer",
-     *     "expires_in": null
+     *     "user": {"id": 1, "name": "Agent", "role": "agent"},
+     *     "access_token": "2|xyz..."
      *   }
-     * }
-     *
-     * @response 401 {
-     *   "success": false,
-     *   "message": "Invalid credentials. Please check your email and password."
-     * }
-     *
-     * @response 429 {
-     *   "success": false,
-     *   "message": "Too many login attempts. Please try again in 60 seconds."
      * }
      */
     public function login(Request $request): JsonResponse
@@ -230,19 +210,15 @@ class AuthController extends Controller
     }
 
     /**
-     * Logout user
+     * Logout
      *
-     * Revoke the current access token
+     * Déconnecter l'utilisateur actuel
      *
      * @authenticated
      *
      * @response 200 {
      *   "success": true,
-     *   "message": "Logout successful. See you soon!"
-     * }
-     *
-     * @response 401 {
-     *   "message": "Unauthenticated."
+     *   "message": "Logout successful"
      * }
      */
     public function logout(Request $request): JsonResponse
@@ -266,22 +242,15 @@ class AuthController extends Controller
     }
 
     /**
-     * Get current authenticated user
+     * Me
      *
-     * Retrieve the profile of the currently authenticated user
+     * Récupérer le profil de l'utilisateur connecté
      *
      * @authenticated
      *
      * @response 200 {
      *   "success": true,
-     *   "data": {
-     *     "id": 2,
-     *     "name": "Agent Immobilier",
-     *     "email": "agent@digitup.com",
-     *     "role": "agent",
-     *     "created_at": "2025-11-11T18:00:00.000000Z",
-     *     "updated_at": "2025-11-11T18:00:00.000000Z"
-     *   }
+     *   "data": {...}
      * }
      */
     public function me(Request $request): JsonResponse

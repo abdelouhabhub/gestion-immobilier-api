@@ -7,9 +7,9 @@ use function Knuckles\Scribe\Config\{removeStrategies, configureStrategy};
 
 
 return [
-    'title' => 'API Gestion Immobilière',
+    'title' => 'API Gestion Immobilière Documentation',
 
-    'description' => 'Documentation de l\'API REST pour la gestion de biens immobiliers',
+    'description' => 'Documentation complète de l\'API REST pour la gestion de biens immobiliers',
 
 
     'intro_text' => <<<INTRO
@@ -19,20 +19,12 @@ return [
         You can switch the language used with the tabs at the top right (or from the nav menu at the top left on mobile).</aside>
     INTRO,
 
-    'base_url' => 'http://localhost:8000',
+    'base_url' => env('APP_URL', 'http://localhost:8000'),
 
     'routes' => [
         [
             'match' => [
                 'prefixes' => ['api/*'],
-                'domains' => ['*'],
-            ],
-            'include' => [],
-            'exclude' => [],
-            'apply' => [
-                'headers' => [
-                    'Accept' => 'application/json',
-                ],
             ],
         ],
     ],
@@ -93,8 +85,6 @@ return [
         'default' => false,
         'in' => 'bearer',
         'name' => 'Authorization',
-        'use_value' => env('SCRIBE_AUTH_KEY'),
-        'placeholder' => '{YOUR_AUTH_KEY}',
     ],
 
     // Example requests for each endpoint will be shown in each of these languages.

@@ -104,6 +104,16 @@ php artisan test
 - CRUD biens immobiliers
 - Filtres
 
+## 📚 Documentation API (Swagger)
+Documentation interactive disponible après installation :
+Accès : `http://localhost:8000/docs`
+
+La documentation Swagger permet de :
+- Explorer tous les endpoints
+- Tester les requêtes directement
+- Voir les schémas de données
+- Exemples de réponses
+
 ## 👨‍💻 Développeur
 
 **Abdelouahab BOUMARAF**  
