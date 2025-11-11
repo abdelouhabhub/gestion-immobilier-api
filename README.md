@@ -85,10 +85,10 @@ php artisan serve
 - DTOs entre couches
 - Gestion erreurs formatées JSON
 
-### Bonus
+### Features
 
 - Soft deletes sur properties
-
+- Documentation SWAGGER
 ---
 
 ## 🧪 Tests
