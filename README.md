@@ -49,7 +49,7 @@ php artisan serve
 ## 🏗️ Architecture 3 Couches
 
 ### Schéma du Flux
-![architecture-3-layers.drawio (1).png](..%2Farchitecture-3-layers.drawio%20%281%29.png)
+![Architecture Diagram](docs/architecture-diagram.png)
 
 ### Composants de l'Architecture
 
